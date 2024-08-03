@@ -1,2 +1,2 @@
 # network-anomaly-detection
-This project focuses on enhancing network security by implementing an anomaly detection system using the DBSCAN algorithm and by analyzing the CICIDS 2017 dataset.
+This project focuses on enhancing network security by implementing an anomaly detection system using advanced machine learning techniques, including Random Forest and Neural Networks, specifically utilizing a deep learning model with multiple layers of dense neurons and dropout layers to prevent overfitting. The model analyzes the CICIDS 2017 dataset to effectively identify and classify anomalous network traffic, ensuring robust and accurate detection of potential security threats.
