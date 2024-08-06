@@ -7,7 +7,7 @@ from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_sc
 import tensorflow as tf
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Dense, Dropout
-from tensorflow.keras.callbacks import EarlyStopping
+from tensorflow.keras.callbacks import EarlyStopping, Callback
 import joblib
 
 # List of top 20 features
@@ -64,7 +64,16 @@ def evaluate_model(model, X, y_true):
     f1 = f1_score(y_true, y_pred, zero_division=1)
     return accuracy, precision, recall, f1
 
-# Example usage
+class TrainingHistory(Callback):
+    def on_train_begin(self, logs=None):
+        self.history = {'loss': [], 'accuracy': [], 'val_loss': [], 'val_accuracy': []}
+
+    def on_epoch_end(self, epoch, logs=None):
+        self.history['loss'].append(logs.get('loss'))
+        self.history['accuracy'].append(logs.get('accuracy'))
+        self.history['val_loss'].append(logs.get('val_loss'))
+        self.history['val_accuracy'].append(logs.get('val_accuracy'))
+
 if __name__ == "__main__":
     input_file = os.path.join('..', 'data', 'processed', 'processed_data.csv') 
     X, y = load_and_prepare_data(input_file)
@@ -78,8 +87,9 @@ if __name__ == "__main__":
     nn_model = build_nn_model(input_dim=X_train.shape[1])
     
     early_stopping = EarlyStopping(monitor='val_loss', patience=5, restore_best_weights=True)
+    history = TrainingHistory()
     
-    nn_model.fit(X_train, y_train, validation_data=(X_test, y_test), epochs=50, batch_size=32, callbacks=[early_stopping])
+    nn_model.fit(X_train, y_train, validation_data=(X_test, y_test), epochs=50, batch_size=32, callbacks=[early_stopping, history])
     
     train_accuracy, train_precision, train_recall, train_f1 = evaluate_model(nn_model, X_train, y_train)
     print(f'Training Data - Accuracy: {train_accuracy}, Precision: {train_precision}, Recall: {train_recall}, F1-Score: {train_f1}')
@@ -89,4 +99,4 @@ if __name__ == "__main__":
     
     # Save the true labels and predicted probabilities for the test set
     y_test_pred_prob = nn_model.predict(X_test)
-    joblib.dump((y_test, y_test_pred_prob), 'test_predictions.pkl')
+    joblib.dump((y_test, y_test_pred_prob, history.history), 'test_predictions_and_training_history.pkl')
