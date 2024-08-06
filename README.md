@@ -67,6 +67,16 @@ The ROC curve demonstrates the trade-off between the true positive rate and fals
 
 ![ROC Curve](graphs/roc_curve.jpeg)
 
+### Training and Validation Loss
+The training and validation loss curves show the model's loss over epochs, indicating how well the model is learning over time.
+
+![Training and Validation Loss](graphs/training_validation_loss.png)
+
+### Training and Validation Accuracy
+The training and validation accuracy curves show the model's accuracy over epochs, indicating how well the model's predictions align with the true labels.
+
+![Training and Validation Accuracy](graphs/training_validation_accuracy.png)
+
 ## Usage
 
 ### Prerequisites
@@ -78,4 +88,3 @@ The ROC curve demonstrates the trade-off between the true positive rate and fals
    ```bash
    git clone https://github.com/yourusername/network-anomaly-detection.git
    cd network-anomaly-detection
-
